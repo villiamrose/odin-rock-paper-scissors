@@ -53,3 +53,6 @@ function playRound(playerSelection, computerSelection) {
     return `You win! ${pSelect.toUpperCase()} beats ${cSelect.toUpperCase()}`;
   }
 }
+
+const mySelection = `rock`;
+console.log(playRound(mySelection, getComputerChoice()));
