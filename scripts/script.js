@@ -4,6 +4,12 @@ function getActions () {
   return actions;
 }
 
+// return a random value between 0 and the given maxValue
+function getRandomNumber(maxValue) {
+  const minValue = 0;
+  return Math.floor(Math.random() * (maxValue - minValue + 1) + minValue);
+}
+
 // randomly choose between current available actions
 // this serves as the selection of the computer
 function getComputerChoice() {
@@ -13,8 +19,37 @@ function getComputerChoice() {
   return actions[index];
 }
 
-// return a random value between 0 and the given maxValue
-function getRandomNumber(maxValue) {
-  const minValue = 0;
-  return Math.floor(Math.random() * (maxValue - minValue + 1) + minValue);
+// return the weakness of the given action
+function getWeakness(action) {
+  let weakness = undefined; 
+
+  switch(action) {
+    case `rock`:
+      weakness = `paper`;
+      break;
+    case `paper`:
+      weakness =  `gun`;
+      break;
+    case `gun`:
+      weakness = `rock`;
+      break;
+    default:
+      weakness = ``;  
+  }
+
+  return weakness;
+}
+
+// declare the winner between the given selections
+function playRound(playerSelection, computerSelection) {
+  const pSelect = playerSelection.toLowerCase(); 
+  const cSelect = computerSelection.toLowerCase();
+
+  if (pSelect === cSelect) {
+    return `Draw! You both chose ${pSelect.toUpperCase()}.`
+  } else if (getWeakness(pSelect) === cSelect) {
+    return `You lose! ${cSelect.toUpperCase()} beats ${pSelect.toUpperCase()}`;
+  } else {
+    return `You win! ${pSelect.toUpperCase()} beats ${cSelect.toUpperCase()}`;
+  }
 }
