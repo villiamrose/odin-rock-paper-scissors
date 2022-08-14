@@ -21,7 +21,7 @@ function getComputerChoice() {
 
 // return the weakness of the given action
 function getWeakness(action) {
-  let weakness = undefined; 
+  let weakness = ``; 
 
   switch(action) {
     case `rock`:
@@ -33,8 +33,6 @@ function getWeakness(action) {
     case `gun`:
       weakness = `rock`;
       break;
-    default:
-      weakness = ``;  
   }
 
   return weakness;
