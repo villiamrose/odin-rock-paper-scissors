@@ -77,6 +77,24 @@ function displayRoundResult(playerAction, computerAction, result) {
   }
 }
 
+//prompts for and validates user action
+function promptAction() {
+  const validActions = getActions();
+  let playerAction = ``; 
+  let keepGoing = true;
+  
+  while(keepGoing) {
+    playerAction = prompt(`Enter your action`, ``);
+    if(validActions.indexOf(playerAction.toLowerCase()) > -1) {
+      keepGoing = false;
+    } else {
+      console.log(`Try again, valid actions are: ${validActions.toString()}`);
+    }
+  }
+
+  return playerAction;
+}
+
 //play a 5 round game, keeping score for each round,
 //and reporting a winner or loser at the end
 function game() {
@@ -87,7 +105,7 @@ function game() {
   for (let i = 1; i <= 5; i++) {
     console.log(`Round ${i}`);
 
-    const playerAction = prompt(`Enter your action`, ``);
+    const playerAction = promptAction();
     const computerAction = getComputerChoice();
     const result = playRound(playerAction, computerAction);
 
