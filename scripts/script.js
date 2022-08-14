@@ -46,13 +46,63 @@ function playRound(playerSelection, computerSelection) {
   const cSelect = computerSelection.toLowerCase();
 
   if (pSelect === cSelect) {
-    return `Draw! You both chose ${pSelect.toUpperCase()}.`
+    return 0;
   } else if (getWeakness(pSelect) === cSelect) {
-    return `You lose! ${cSelect.toUpperCase()} beats ${pSelect.toUpperCase()}`;
+    return -1;
   } else {
-    return `You win! ${pSelect.toUpperCase()} beats ${cSelect.toUpperCase()}`;
+    return 1;
   }
 }
 
-const mySelection = `rock`;
-console.log(playRound(mySelection, getComputerChoice()));
+//display the result of the game based on the scores
+function displayGameResult(playerScore, computerScore) {
+  if(playerScore === computerScore) {
+    console.log(`It's a draw!`);
+  } else if (playerScore > computerScore) {
+    console.log(`You won!`);
+  } else {
+    console.log(`You lost!`);
+  }
+
+  console.log(`Player score: ${playerScore}`);
+  console.log(`Computer score: ${computerScore}`);
+}
+
+// display the result of the round
+function displayRoundResult(playerAction, computerAction, result) {
+  if(result === 1) {
+    console.log(`You win! ${playerAction.toUpperCase()} beats ${computerAction.toUpperCase()}`);
+  } else if (result === -1) {
+    console.log(`You lose! ${computerAction.toUpperCase()} beats ${playerAction.toUpperCase()}`);
+  } else {
+    console.log(`Draw! You both chose ${playerAction.toUpperCase()}.`);
+  }
+}
+
+//play a 5 round game, keeping score for each round,
+//and reporting a winner or loser at the end
+function game() {
+  let playerScore = 0;
+  let computerScore = 0;
+
+  //play 5 rounds
+  for (let i = 1; i <= 5; i++) {
+    console.log(`Round ${i}`);
+
+    const playerAction = prompt(`Enter your action`, ``);
+    const computerAction = getComputerChoice();
+    const result = playRound(playerAction, computerAction);
+
+    displayRoundResult(playerAction, computerAction, result);
+    
+    if(result === 1) {
+      playerScore++;
+    } else if (result === -1) {
+      computerScore++;
+    }
+  }
+
+  displayGameResult(playerScore, computerScore);
+}
+
+game();
