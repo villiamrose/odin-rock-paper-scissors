@@ -85,7 +85,8 @@ function promptAction() {
   
   while(keepGoing) {
     playerAction = prompt(`Enter your action`, ``);
-    if(validActions.indexOf(playerAction.toLowerCase()) > -1) {
+
+    if(playerAction === null || validActions.indexOf(playerAction.toLowerCase()) > -1) {
       keepGoing = false;
     } else {
       console.log(`Try again, valid actions are: ${validActions.toString()}`);
@@ -106,6 +107,11 @@ function game() {
     console.log(`Round ${i}`);
 
     const playerAction = promptAction();
+    if (playerAction === null) {
+      console.log(`You cancelled the game`);
+      playerScore = computerScore = 0;
+      break;
+    }
     const computerAction = getComputerChoice();
     const result = playRound(playerAction, computerAction);
 
