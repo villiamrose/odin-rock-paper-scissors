@@ -95,36 +95,3 @@ function promptAction() {
 
   return playerAction;
 }
-
-//play a 5 round game, keeping score for each round,
-//and reporting a winner or loser at the end
-function game() {
-  let playerScore = 0;
-  let computerScore = 0;
-
-  //play 5 rounds
-  for (let i = 1; i <= 5; i++) {
-    console.log(`Round ${i}`);
-
-    const playerAction = promptAction();
-    if (playerAction === null) {
-      console.log(`You cancelled the game`);
-      playerScore = computerScore = 0;
-      break;
-    }
-    const computerAction = getComputerChoice();
-    const result = playRound(playerAction, computerAction);
-
-    displayRoundResult(playerAction, computerAction, result);
-    
-    if(result === 1) {
-      playerScore++;
-    } else if (result === -1) {
-      computerScore++;
-    }
-  }
-
-  displayGameResult(playerScore, computerScore);
-}
-
-game();
