@@ -38,6 +38,8 @@ html, body {
 }
 
 .info {
+  overflow: hidden;
+  
   border: 1px solid green;
   flex: 1 0 25%;
 
@@ -51,6 +53,7 @@ html, body {
 
 .log {
   border: 1px solid yellow;
+  overflow: hidden;
 }
 
 .stats {
