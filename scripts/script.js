@@ -46,7 +46,7 @@ class Game {
     if (this._round == Game.MAX_ROUNDS) {
       this.displayResult();
       confirm('Play again?');
-      location.reload();
+      resetGame(this);
     } else {
       this._round++;
     };
@@ -187,6 +187,12 @@ function playRound(game) {
   round.displayResult();
 
   game.nextRound();
+}
+
+function resetGame(game) {
+  const actionButtons = document.querySelectorAll('.actions button');
+  actionButtons.forEach(button => button.removeEventListener('click', game));
+  newGame();
 }
 
 //starts a new game
