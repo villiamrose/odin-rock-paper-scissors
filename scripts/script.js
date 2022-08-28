@@ -1,3 +1,49 @@
+class Game {
+  constructor() {
+    this._playerScore = 0;
+    this._computerScore = 0;
+    this._round = 1;
+  }
+
+  getPlayerScore() {
+    return this._playerScore;
+  }
+
+  addPlayerScore() {
+    console.log(`player score added`);
+    this._playerScore++;
+    return this._playerScore;
+  }
+
+  getComputerScore() {
+    return this._computerScore;
+  }
+
+  addComputerScore() {
+    console.log(`computer score added`);
+    this._computerScore++;
+    return this._computerScore;
+  }
+
+  getRound() {
+    return this._round;
+  }
+
+  nextRound() {
+    this._round++;
+    return this._round;
+  }
+
+  handleEvent(e) {
+    if (e.type === 'click') {
+      setSelectedButton(e.target);
+      if(confirmSelection()) {
+        playRound(this);
+      }
+    };
+  }
+}
+
 // return list of available actions
 function getActions () {
   const actions = [`rock`, `paper`, `gun`];
@@ -38,20 +84,6 @@ function getWeakness(action) {
   return weakness;
 }
 
-// declare the winner between the given selections
-function playRound(playerSelection, computerSelection) {
-  const pSelect = playerSelection.toLowerCase(); 
-  const cSelect = computerSelection.toLowerCase();
-
-  if (pSelect === cSelect) {
-    return 0;
-  } else if (getWeakness(pSelect) === cSelect) {
-    return -1;
-  } else {
-    return 1;
-  }
-}
-
 //display the result of the game based on the scores
 function displayGameResult(playerScore, computerScore) {
   if(playerScore === computerScore) {
@@ -77,77 +109,67 @@ function displayRoundResult(playerAction, computerAction, result) {
   }
 }
 
-//prompts for and validates user action
-function promptAction() {
-  const validActions = getActions();
-  let playerAction = ``; 
-  let keepGoing = true;
-  
-  while(keepGoing) {
-    playerAction = prompt(`Enter your action`, ``);
-
-    if(playerAction === null || validActions.indexOf(playerAction.toLowerCase()) > -1) {
-      keepGoing = false;
-    } else {
-      console.log(`Try again, valid actions are: ${validActions.toString()}`);
-    }
-  }
-
-  return playerAction;
+// prompts selection confirmation, returns answer
+function confirmSelection() {
+  const selectedButton = document.querySelector('button.selected');
+  return confirm(`Use ${selectedButton.textContent}?`);
 }
 
-class Game {
-  constructor() {
-    this._playerScore = 0;
-    this._computerScore = 0;
-    this._round = 0;
-  }
-
-  getPlayerScore() {
-    return this._playerScore;
-  }
-
-  addPlayerScore() {
-    this._playerScore++;
-    return this._playerScore;
-  }
-
-  getComputerScore() {
-    this._computerScore++;
-  }
-
-  addComputerScore() {
-    this._computerScore++;
-    return this._computerScore;
-  }
-
-  getRound() {
-    this._round;
-  }
-
-  nextRound() {
-    this._round++;
-    return this._round;
-  }
-
-  handleEvent(e) {
-    if (e.type === 'click') setSelected(e.target);
-  }
-}
-
-function setSelected(button) {
+// sets given button as selected
+function setSelectedButton(button) {
   const selectedButton = document.querySelector('button.selected');
   if(selectedButton) selectedButton.classList.remove('selected');
 
   button.classList.add('selected');
 }
 
-//main function
-function main() {
+// returns selected action
+function getPlayerAction() {
+  const selectedButton = document.querySelector('button.selected')
+  const targetId = selectedButton.id;
+  const action = targetId.split('_')[1];
+
+  return action;
+}
+
+// returns result of player and computer action 
+function getRoundResult(playerAction, computerAction) {
+  if (playerAction === computerAction) {
+    return 0;
+  } else if (getWeakness(playerAction) === computerAction) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+
+// declare the winner between the given selections
+function playRound(game) {
+  console.log(`Round ${game.getRound()}`);
+
+  const playerAction = getPlayerAction(); 
+  const computerAction = getComputerAction();
+  const result = getRoundResult(playerAction, computerAction);
+
+  displayRoundResult(playerAction, computerAction, result);
+
+  if(result == 1) {
+    game.addPlayerScore();
+  } else if (result == -1) {
+    game.addComputerScore();
+  }
+  game.nextRound();
+
+  console.log(game.getPlayerScore());
+  console.log(game.getComputerScore());
+}
+
+//starts a new game
+function newGame() {
   let game = new Game();
 
   const actionButtons = document.querySelectorAll('.actions button');
   actionButtons.forEach(button => button.addEventListener('click', game))
 }
 
-main();
+newGame();
