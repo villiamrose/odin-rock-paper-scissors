@@ -1,3 +1,36 @@
+class Screen {
+  static #logElement = document.querySelector('.log');
+  static #actionButtons = document.querySelectorAll('.actions button');
+
+  static log(text) {
+   this.#logElement.innerHTML = (text + '...<br/>' + this.#logElement.innerHTML);
+  }
+
+  static clearLog() {
+    this.#logElement.innerHTML = "";
+  }
+
+  static getActionButtons() {
+    return this.#actionButtons;
+  }
+
+  static getSelectedButton() {
+    return document.querySelector('button.selected');
+  }
+
+  static setSelectedButton(button) {
+    const selectedButton = this.getSelectedButton();
+    if(selectedButton) selectedButton.classList.remove('selected');
+
+    button.classList.add('selected');
+  }
+
+  static confirmSelection() {
+    const selectedButton = this.getSelectedButton();
+    return confirm(`Use ${selectedButton.textContent}?`);
+  }
+}
+
 class Game {
   static MAX_ROUNDS = 5;
 
@@ -30,22 +63,22 @@ class Game {
   }
 
   displayResult() {
-    console.log(`Game over!`);
+    Screen.log(`Game over!`);
     if(this._playerScore === this._computerScore) {
-      console.log(`It's a draw!`);
+      Screen.log(`It's a draw!`);
     } else if (this._playerScore > this._computerScore) {
-      console.log(`You won!`);
+      Screen.log(`You won!`);
     } else {
-      console.log(`You lost!`);
+      Screen.log(`You lost!`);
     }
-    console.log(`Player score: ${this._playerScore}`);
-    console.log(`Computer score: ${this._computerScore}`);
+    Screen.log(`Player score: ${this._playerScore}`);
+    Screen.log(`Computer score: ${this._computerScore}`);
   }
 
   nextRound() {
     if (this._round == Game.MAX_ROUNDS) {
       this.displayResult();
-      confirm('Play again?');
+      // confirm('Play again?');
       resetGame(this);
     } else {
       this._round++;
@@ -55,8 +88,8 @@ class Game {
 
   handleEvent(e) {
     if (e.type === 'click') {
-      setSelectedButton(e.target);
-      if(confirmSelection()) {
+      Screen.setSelectedButton(e.target);
+      if(Screen.confirmSelection()) {
         playRound(this);
       }
     };
@@ -95,11 +128,11 @@ class Round {
 
   displayResult() {
     if(this.getResult() === 1) {
-      console.log(`You win! ${this._playerAction.toUpperCase()} beats ${this._computerAction.toUpperCase()}`);
+      Screen.log(`You win! ${this._playerAction.toUpperCase()} beats ${this._computerAction.toUpperCase()}`);
     } else if (this.getResult() === -1) {
-      console.log(`You lose! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
+      Screen.log(`You lose! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
     } else {
-      console.log(`Draw! You both chose ${this._playerAction.toUpperCase()}.`);
+      Screen.log(`Draw! You both chose ${this._playerAction.toUpperCase()}.`);
     }
   }
 }
@@ -121,7 +154,7 @@ function getRandomNumber(maxValue) {
 function getComputerAction() {
   const actions = getActions();
   const index = getRandomNumber(actions.length - 1);
-  console.log(`Computer picks ${actions[index]}`);
+  Screen.log(`Computer picks ${actions[index]}`);
   return actions[index];
 }
 
@@ -144,23 +177,9 @@ function getWeakness(action) {
   return weakness;
 }
 
-// prompts selection confirmation, returns answer
-function confirmSelection() {
-  const selectedButton = document.querySelector('button.selected');
-  return confirm(`Use ${selectedButton.textContent}?`);
-}
-
-// sets given button as selected
-function setSelectedButton(button) {
-  const selectedButton = document.querySelector('button.selected');
-  if(selectedButton) selectedButton.classList.remove('selected');
-
-  button.classList.add('selected');
-}
-
 // returns selected action
 function getPlayerAction() {
-  const selectedButton = document.querySelector('button.selected')
+  const selectedButton = Screen.getSelectedButton();
   const targetId = selectedButton.id;
   const action = targetId.split('_')[1];
 
@@ -169,7 +188,7 @@ function getPlayerAction() {
 
 // declare the winner between the given selections
 function playRound(game) {
-  console.log(`Round ${game.getRound()}`);
+  Screen.log(`Round ${game.getRound()}`);
 
   const round = new Round(
     game.getRound(),
@@ -190,7 +209,7 @@ function playRound(game) {
 }
 
 function resetGame(game) {
-  const actionButtons = document.querySelectorAll('.actions button');
+  const actionButtons = Screen.getActionButtons();
   actionButtons.forEach(button => button.removeEventListener('click', game));
   newGame();
 }
@@ -199,7 +218,7 @@ function resetGame(game) {
 function newGame() {
   let game = new Game();
 
-  const actionButtons = document.querySelectorAll('.actions button');
+  const actionButtons = Screen.getActionButtons();
   actionButtons.forEach(button => button.addEventListener('click', game))
 }
 
