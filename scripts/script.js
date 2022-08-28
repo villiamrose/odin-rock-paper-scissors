@@ -44,6 +44,47 @@ class Game {
   }
 }
 
+class Round {
+  constructor(round, playerAction, computerAction) {
+    this._round = round;
+    this._playerAction = playerAction,
+    this._computerAction = computerAction
+  }
+
+  getRound() {
+    return this._round;
+  }
+
+  getPlayerAction() {
+    return this._playerAction;
+  }
+
+  getComputerAction() {
+    return this._computerAction
+  }
+
+  getResult() {
+    if (this._result) return this._result;
+    if (this._playerAction === this._computerAction) {
+      return this._result = 0;
+    } else if (getWeakness(this._playerAction) === this._computerAction) {
+      return this._result = -1;
+    } else {
+      return this._result = 1;
+    }
+  }
+
+  displayResult() {
+    if(this.getResult() === 1) {
+      console.log(`You win! ${this._playerAction.toUpperCase()} beats ${this._computerAction.toUpperCase()}`);
+    } else if (this.getResult() === -1) {
+      console.log(`You lose! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
+    } else {
+      console.log(`Draw! You both chose ${this._playerAction.toUpperCase()}.`);
+    }
+  }
+}
+
 // return list of available actions
 function getActions () {
   const actions = [`rock`, `paper`, `gun`];
@@ -98,17 +139,6 @@ function displayGameResult(playerScore, computerScore) {
   console.log(`Computer score: ${computerScore}`);
 }
 
-// display the result of the round
-function displayRoundResult(playerAction, computerAction, result) {
-  if(result === 1) {
-    console.log(`You win! ${playerAction.toUpperCase()} beats ${computerAction.toUpperCase()}`);
-  } else if (result === -1) {
-    console.log(`You lose! ${computerAction.toUpperCase()} beats ${playerAction.toUpperCase()}`);
-  } else {
-    console.log(`Draw! You both chose ${playerAction.toUpperCase()}.`);
-  }
-}
-
 // prompts selection confirmation, returns answer
 function confirmSelection() {
   const selectedButton = document.querySelector('button.selected');
@@ -132,32 +162,25 @@ function getPlayerAction() {
   return action;
 }
 
-// returns result of player and computer action 
-function getRoundResult(playerAction, computerAction) {
-  if (playerAction === computerAction) {
-    return 0;
-  } else if (getWeakness(playerAction) === computerAction) {
-    return -1;
-  } else {
-    return 1;
-  }
-}
-
 // declare the winner between the given selections
 function playRound(game) {
   console.log(`Round ${game.getRound()}`);
 
-  const playerAction = getPlayerAction(); 
-  const computerAction = getComputerAction();
-  const result = getRoundResult(playerAction, computerAction);
-
-  displayRoundResult(playerAction, computerAction, result);
-
-  if(result == 1) {
+  const round = new Round(
+    game.getRound(),
+    getPlayerAction(),
+    getComputerAction()
+  );
+  
+  const roundResult = round.getResult();
+  if(roundResult == 1) {
     game.addPlayerScore();
-  } else if (result == -1) {
+  } else if (roundResult == -1) {
     game.addComputerScore();
   }
+  
+  round.displayResult();
+  
   game.nextRound();
 
   console.log(game.getPlayerScore());
