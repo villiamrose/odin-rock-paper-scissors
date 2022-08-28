@@ -12,7 +12,7 @@ function getRandomNumber(maxValue) {
 
 // randomly choose between current available actions
 // this serves as the selection of the computer
-function getcomputerAction() {
+function getComputerAction() {
   const actions = getActions();
   const index = getRandomNumber(actions.length - 1);
   console.log(`Computer picks ${actions[index]}`);
@@ -96,37 +96,58 @@ function promptAction() {
   return playerAction;
 }
 
-// returns action of click event
-function getClickEventAction(event) {
-  if (!event.target.id) return null;
-  
-  const targetId = event.target.id;
-  const action = targetId.split('_')[1];
+class Game {
+  constructor() {
+    this._playerScore = 0;
+    this._computerScore = 0;
+    this._round = 0;
+  }
 
-  return action;
+  getPlayerScore() {
+    return this._playerScore;
+  }
+
+  addPlayerScore() {
+    this._playerScore++;
+    return this._playerScore;
+  }
+
+  getComputerScore() {
+    this._computerScore++;
+  }
+
+  addComputerScore() {
+    this._computerScore++;
+    return this._computerScore;
+  }
+
+  getRound() {
+    this._round;
+  }
+
+  nextRound() {
+    this._round++;
+    return this._round;
+  }
+
+  handleEvent(e) {
+    if (e.type === 'click') setSelected(e.target);
+  }
+}
+
+function setSelected(button) {
+  const selectedButton = document.querySelector('button.selected');
+  if(selectedButton) selectedButton.classList.remove('selected');
+
+  button.classList.add('selected');
 }
 
 //main function
 function main() {
-  let playerScore = 0;
-  let computerScore = 0;
+  let game = new Game();
 
   const actionButtons = document.querySelectorAll('.actions button');
-  actionButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      const playerAction = getClickEventAction(e);
-      const computerAction = getcomputerAction();
-      const result = playRound(playerAction, computerAction);
-
-      displayRoundResult(playerAction, computerAction, result);
-
-      if(result === 1) {
-        playerScore++;
-      } else if (result === -1) {
-        computerScore++;
-      }
-    });
-  })
+  actionButtons.forEach(button => button.addEventListener('click', game))
 }
 
 main();
