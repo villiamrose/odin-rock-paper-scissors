@@ -12,7 +12,6 @@ class Game {
   }
 
   addPlayerScore() {
-    console.log(`player score added`);
     this._playerScore++;
     return this._playerScore;
   }
@@ -22,7 +21,6 @@ class Game {
   }
 
   addComputerScore() {
-    console.log(`computer score added`);
     this._computerScore++;
     return this._computerScore;
   }
@@ -47,6 +45,7 @@ class Game {
   nextRound() {
     if (this._round == Game.MAX_ROUNDS) {
       this.displayResult();
+      confirm('Play again?');
       location.reload();
     } else {
       this._round++;
