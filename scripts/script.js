@@ -1,4 +1,6 @@
 class Game {
+  static MAX_ROUNDS = 5;
+
   constructor() {
     this._playerScore = 0;
     this._computerScore = 0;
@@ -29,8 +31,26 @@ class Game {
     return this._round;
   }
 
+  displayResult() {
+    console.log(`Game over!`);
+    if(this._playerScore === this._computerScore) {
+      console.log(`It's a draw!`);
+    } else if (this._playerScore > this._computerScore) {
+      console.log(`You won!`);
+    } else {
+      console.log(`You lost!`);
+    }
+    console.log(`Player score: ${this._playerScore}`);
+    console.log(`Computer score: ${this._computerScore}`);
+  }
+
   nextRound() {
-    this._round++;
+    if (this._round == Game.MAX_ROUNDS) {
+      this.displayResult();
+      location.reload();
+    } else {
+      this._round++;
+    };
     return this._round;
   }
 
@@ -125,20 +145,6 @@ function getWeakness(action) {
   return weakness;
 }
 
-//display the result of the game based on the scores
-function displayGameResult(playerScore, computerScore) {
-  if(playerScore === computerScore) {
-    console.log(`It's a draw!`);
-  } else if (playerScore > computerScore) {
-    console.log(`You won!`);
-  } else {
-    console.log(`You lost!`);
-  }
-
-  console.log(`Player score: ${playerScore}`);
-  console.log(`Computer score: ${computerScore}`);
-}
-
 // prompts selection confirmation, returns answer
 function confirmSelection() {
   const selectedButton = document.querySelector('button.selected');
@@ -180,11 +186,8 @@ function playRound(game) {
   }
   
   round.displayResult();
-  
-  game.nextRound();
 
-  console.log(game.getPlayerScore());
-  console.log(game.getComputerScore());
+  game.nextRound();
 }
 
 //starts a new game
