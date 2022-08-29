@@ -1,4 +1,10 @@
+@font-face {
+  font-family: 'Undefined';
+  src: url("fonts/undefined.woff2") format('woff2')
+}
+
 * {
+  font-family: 'Undefined', monospace;
   box-sizing: border-box;
 }
 html, body {
