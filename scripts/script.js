@@ -1,13 +1,54 @@
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 class Screen {
-  static #logElement = document.querySelector('.log');
+  static #currentLog = document.querySelector('.log .current');
+  static #previousLog = document.querySelector('.log .previous');
   static #actionButtons = document.querySelectorAll('.actions button');
+  
+  static #isLogging = false;
+  static #logQueue = [];
+  
+  static #startLogging() {
+    this.#isLogging = true;
+    
+    const interval = 50;
+    let timeout = 0;
+    let logText = `${this.#logQueue[0]}...`;
+    let textArray = logText.split('');
+
+    textArray.forEach((letter, index) => {
+      setTimeout(() => {
+        this.#currentLog.innerHTML += letter;
+        
+        if(index == textArray.length - 1) {
+          this.#logQueue.shift();
+
+          this.#previousLog.innerHTML = `${logText} <br/> ${this.#previousLog.innerHTML}`;
+          this.#currentLog.innerHTML = ``;
+          
+          if (this.#logQueue.length) {
+            this.#startLogging();
+          } else {
+            this.#isLogging = false;
+          }
+        }
+      }, timeout += interval);
+    });
+  }
 
   static log(text) {
-   this.#logElement.innerHTML = (text + '...<br/>' + this.#logElement.innerHTML);
+    this.#logQueue.push(text);
+    if(!this.isLogging()) this.#startLogging();
+  }
+
+  static isLogging() {
+    return this.#isLogging;
   }
 
   static clearLog() {
-    this.#logElement.innerHTML = "";
+    this.#previousLog.innerHTML = "";
   }
 
   static getActionButtons() {
@@ -63,16 +104,16 @@ class Game {
   }
 
   displayResult() {
-    Screen.log(`Game over!`);
     if(this._playerScore === this._computerScore) {
       Screen.log(`It's a draw!`);
     } else if (this._playerScore > this._computerScore) {
-      Screen.log(`You won!`);
+      Screen.log(`You won the game!`);
     } else {
-      Screen.log(`You lost!`);
+      Screen.log(`You lost the game!`);
     }
     Screen.log(`Player score: ${this._playerScore}`);
     Screen.log(`Computer score: ${this._computerScore}`);
+    Screen.log(`Game over!`);
   }
 
   nextRound() {
@@ -87,12 +128,13 @@ class Game {
   }
 
   handleEvent(e) {
+    if(Screen.isLogging()) return;
     if (e.type === 'click') {
       Screen.setSelectedButton(e.target);
       if(Screen.confirmSelection()) {
         playRound(this);
       }
-    };
+    }
   }
 }
 
@@ -128,11 +170,11 @@ class Round {
 
   displayResult() {
     if(this.getResult() === 1) {
-      Screen.log(`You win! ${this._playerAction.toUpperCase()} beats ${this._computerAction.toUpperCase()}`);
+      Screen.log(`Player wins! ${this._playerAction.toUpperCase()} beats ${this._computerAction.toUpperCase()}`);
     } else if (this.getResult() === -1) {
-      Screen.log(`You lose! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
+      Screen.log(`Computer wins! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
     } else {
-      Screen.log(`Draw! You both chose ${this._playerAction.toUpperCase()}.`);
+      Screen.log(`Draw! You both chose ${this._playerAction.toUpperCase()}`);
     }
   }
 }
@@ -154,7 +196,7 @@ function getRandomNumber(maxValue) {
 function getComputerAction() {
   const actions = getActions();
   const index = getRandomNumber(actions.length - 1);
-  Screen.log(`Computer picks ${actions[index]}`);
+  Screen.log(`Computer uses ${actions[index].toUpperCase()}`);
   return actions[index];
 }
 
@@ -182,14 +224,13 @@ function getPlayerAction() {
   const selectedButton = Screen.getSelectedButton();
   const targetId = selectedButton.id;
   const action = targetId.split('_')[1];
-
+  Screen.log(`Player uses ${action.toUpperCase()}`);
   return action;
 }
 
 // declare the winner between the given selections
 function playRound(game) {
   Screen.log(`Round ${game.getRound()}`);
-
   const round = new Round(
     game.getRound(),
     getPlayerAction(),
