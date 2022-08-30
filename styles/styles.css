@@ -4,7 +4,7 @@
 }
 
 :root {
-  --blue: rgb(10, 120, 180);
+  --bgBlue: linear-gradient(rgb(1, 120, 190), rgb(5, 50, 110));
   --altWhite: rgb(235, 235, 235);
   --gray: #282828;
 }
@@ -15,8 +15,8 @@
 }
 html, body {
   margin: 0;
-  height: 100%;
-  background-color: var(--blue);
+  height: 100vh;
+  background-color: var(--bgBlue);
 }
 
 button {
@@ -29,7 +29,7 @@ button {
 }
 
 button:hover {
-  color: var(--blue);
+  color: var(--bgBlue);
   background-color: white;
 }
 
@@ -40,6 +40,7 @@ button:active {
 
 .display {
   height: 100%;
+  background-image: url('../res/backgrounds/bg_main.png');
 
   display: flex;
   flex-direction: column;
@@ -50,17 +51,22 @@ button:active {
 .main {
   border: 3px solid white;
   border-bottom: none;
-  background-color: var(--gray);
-  background-image: url('../res/backgrounds/bg00.jpg');
+  background-image: url('../res/backgrounds/bg01.jpg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 
   flex: 0 0 75%;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .menu {
+  position: fixed;
+  bottom: 25vh;
+  left: 0;
+
   display: flex;
   align-items: flex-end;
   padding: 1%;
@@ -68,7 +74,7 @@ button:active {
 
 .actions {
   border: 3px solid white;
-  background-color: var(--blue);
+  background: var(--bgBlue);
   border-radius: 5px;
   padding: 10px;
   width: 150px;
@@ -79,7 +85,12 @@ button:active {
   gap: 5px;
 }
 
+.character img {
+  height: 65vh;
+}
+
 .info {
+  background: var(--bgBlue);
   color: white;
   font-size: 20px;
   overflow: hidden;
