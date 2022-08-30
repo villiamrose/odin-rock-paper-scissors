@@ -56,8 +56,14 @@ button:active {
   background-repeat: no-repeat;
   background-position: center;
 
-  
   flex: 0 0 75%;
+  display: flex;
+}
+
+.menu {
+  display: flex;
+  align-items: flex-end;
+  padding: 1%;
 }
 
 .actions {
