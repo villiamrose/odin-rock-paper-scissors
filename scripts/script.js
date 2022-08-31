@@ -13,6 +13,7 @@ class Screen {
   
   static #startLogging() {
     this.#isLogging = true;
+
     
     const interval = 50;
     let timeout = 0;
@@ -99,15 +100,13 @@ class Screen {
 
 class Game {
   static MAX_ROUNDS = 5;
+  #round = 0;
   #enemyHp = 0;
   #heroHp = 0;
 
   constructor() {
     Screen.setBackground();
-    this._playerScore = 0;
-    this._computerScore = 0;
-    this._round = 1;
-    // this.#initializeEnemy();
+    this.#round = 1;
     this.#enemyHp = 5;
     this.#heroHp = 5;
 
@@ -115,24 +114,6 @@ class Game {
     Screen.setEnemyHpTotal(this.#enemyHp);
     Screen.setHeroHpCurrent(this.#heroHp);
     Screen.setHeroHpTotal(this.#heroHp);
-  }
-
-  getPlayerScore() {
-    return this._playerScore;
-  }
-
-  addPlayerScore() {
-    this._playerScore++;
-    return this._playerScore;
-  }
-
-  getComputerScore() {
-    return this._computerScore;
-  }
-
-  addComputerScore() {
-    this._computerScore++;
-    return this._computerScore;
   }
 
   getHeroHp() {
@@ -164,31 +145,26 @@ class Game {
   }
 
   getRound() {
-    return this._round;
+    return this.#round;
   }
 
   displayResult() {
-    if(this._playerScore === this._computerScore) {
-      Screen.log(`It's a draw!`);
-    } else if (this._playerScore > this._computerScore) {
-      Screen.log(`You won the game!`);
+    if (this.#heroHp > this.#enemyHp) {
+      Screen.log(`The enemy has been defeated. You won the game!`);
     } else {
-      Screen.log(`You lost the game!`);
+      Screen.log(`You have been beaten by the enemy. You lost the game!`);
     }
-    Screen.log(`Player score: ${this._playerScore}`);
-    Screen.log(`Computer score: ${this._computerScore}`);
     Screen.log(`Game over!`);
   }
 
   nextRound() {
-    if (this._round == Game.MAX_ROUNDS) {
+    if (this.#heroHp == 0 || this.#enemyHp == 0) {
       this.displayResult();
-      // confirm('Play again?');
       resetGame(this);
     } else {
-      this._round++;
+      this.#round++;
     };
-    return this._round;
+    return this.#round;
   }
 
   handleEvent(e) {
@@ -301,14 +277,15 @@ function playRound(game) {
     getComputerAction()
   );
   
-  const roundResult = round.getResult();
-  if(roundResult == 1) {
-    game.addPlayerScore();
-  } else if (roundResult == -1) {
-    game.addComputerScore();
-  }
-  
   round.displayResult();
+  
+  const roundResult = round.getResult();
+
+  if(roundResult == 1) {
+    game.decreaseEnemyHp();
+  } else if (roundResult == -1) {
+    game.decreaseHeroHp();
+  }
 
   game.nextRound();
 }
