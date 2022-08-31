@@ -79,12 +79,17 @@ class Screen {
 
 class Game {
   static MAX_ROUNDS = 5;
+  #enemyHp = 0;
+  #heroHp = 0;
 
   constructor() {
     Screen.setBackground();
     this._playerScore = 0;
     this._computerScore = 0;
     this._round = 1;
+    // this.#initializeEnemy();
+    this.#enemyHp = 5;
+    this.#heroHp = 5;
   }
 
   getPlayerScore() {
@@ -96,6 +101,17 @@ class Game {
     return this._playerScore;
   }
 
+  getHeroHp() {
+    return this.#heroHp;
+  }
+
+  decreaseHeroHp() {
+    if(this.#heroHp !== 0) {
+      --this.#heroHp;
+    }
+    return this.#heroHp;
+  }
+
   getComputerScore() {
     return this._computerScore;
   }
@@ -103,6 +119,17 @@ class Game {
   addComputerScore() {
     this._computerScore++;
     return this._computerScore;
+  }
+
+  getEnemyHp() {
+    return this.#enemyHp;
+  }
+
+  decreaseEnemyHp() {
+    if (this.#enemyHp !== 0) {
+      --this.#enemyHp;
+    }
+    return this.#enemyHp;
   }
 
   getRound() {
