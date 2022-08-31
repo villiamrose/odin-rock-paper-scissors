@@ -108,11 +108,22 @@ button:active {
 
 .info .stats {
   margin-left: -2px;
-  padding-right: 2px;
-  padding: 30px;
+  padding: 40px;
 
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 }
 
+.stat {
+  display: flex;
+  gap: 5px;
+}
+
+.hp {
+  margin-left: auto;
+}
+
+/* div {
+  border: 1px solid red;
+} */

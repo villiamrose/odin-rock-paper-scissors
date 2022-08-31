@@ -3,6 +3,10 @@ class Screen {
   static #currentLog = document.querySelector('.log .current');
   static #previousLog = document.querySelector('.log .previous');
   static #actionButtons = document.querySelectorAll('.actions button');
+  static #heroHpTotal = document.querySelector('.hero .hp .total');
+  static #heroHpCurrent = document.querySelector('.hero .hp .current');
+  static #enemyHpTotal = document.querySelector('.enemy .hp .total');
+  static #enemyHpCurrent = document.querySelector('.enemy .hp .current');
   
   static #isLogging = false;
   static #logQueue = [];
@@ -75,6 +79,22 @@ class Screen {
     this.#mainScreen.style.backgroundImage = `url('./res/backgrounds/${filename}.jpg')`;
     // setAttribute('background-image', `url('./res/backgrounds/${filename}.jpg')`);
   }
+
+  static setHeroHpCurrent(hp) {
+    this.#heroHpCurrent.textContent = hp;
+  }
+
+  static setEnemyHpCurrent(hp) {
+    this.#enemyHpCurrent.textContent = hp;
+  }
+
+  static setHeroHpTotal(hp) {
+    this.#heroHpTotal.textContent = hp;
+  }
+
+  static setEnemyHpTotal(hp) {
+    this.#enemyHpTotal.textContent = hp;
+  }
 }
 
 class Game {
@@ -90,6 +110,11 @@ class Game {
     // this.#initializeEnemy();
     this.#enemyHp = 5;
     this.#heroHp = 5;
+
+    Screen.setEnemyHpCurrent(this.#enemyHp);
+    Screen.setEnemyHpTotal(this.#enemyHp);
+    Screen.setHeroHpCurrent(this.#heroHp);
+    Screen.setHeroHpTotal(this.#heroHp);
   }
 
   getPlayerScore() {
@@ -101,17 +126,6 @@ class Game {
     return this._playerScore;
   }
 
-  getHeroHp() {
-    return this.#heroHp;
-  }
-
-  decreaseHeroHp() {
-    if(this.#heroHp !== 0) {
-      --this.#heroHp;
-    }
-    return this.#heroHp;
-  }
-
   getComputerScore() {
     return this._computerScore;
   }
@@ -121,14 +135,31 @@ class Game {
     return this._computerScore;
   }
 
+  getHeroHp() {
+    return this.#heroHp;
+  }
+
   getEnemyHp() {
     return this.#enemyHp;
+  }
+
+  decreaseHeroHp() {
+    if(this.#heroHp !== 0) {
+      --this.#heroHp;
+    }
+
+    Screen.setHeroHpCurrent(this.#heroHp);
+
+    return this.#heroHp;
   }
 
   decreaseEnemyHp() {
     if (this.#enemyHp !== 0) {
       --this.#enemyHp;
     }
+
+    Screen.setEnemyHpCurrent(this.#enemyHp);
+
     return this.#enemyHp;
   }
 
