@@ -1,8 +1,5 @@
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 class Screen {
+  static #mainScreen = document.querySelector('.main');
   static #currentLog = document.querySelector('.log .current');
   static #previousLog = document.querySelector('.log .previous');
   static #actionButtons = document.querySelectorAll('.actions button');
@@ -70,12 +67,21 @@ class Screen {
     const selectedButton = this.getSelectedButton();
     return confirm(`Use ${selectedButton.textContent}?`);
   }
+
+  static setBackground() {
+    const NUMBER_OF_IMAGES = 6;
+    const index = getRandomNumber(NUMBER_OF_IMAGES);
+    const filename = `bg${String(index).padStart(2, '0')}`;
+    this.#mainScreen.style.backgroundImage = `url('./res/backgrounds/${filename}.jpg')`;
+    // setAttribute('background-image', `url('./res/backgrounds/${filename}.jpg')`);
+  }
 }
 
 class Game {
   static MAX_ROUNDS = 5;
 
   constructor() {
+    Screen.setBackground();
     this._playerScore = 0;
     this._computerScore = 0;
     this._round = 1;

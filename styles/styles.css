@@ -49,9 +49,6 @@ button:active {
 }
 
 .main {
-  /* border: 3px solid white; */
-  border-bottom: none;
-  background-image: url('../res/backgrounds/bg01.jpg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
