@@ -60,6 +60,7 @@ button:active {
 }
 
 .menu {
+  color: white;
   position: fixed;
   bottom: 25vh;
   left: 0;
@@ -69,7 +70,13 @@ button:active {
   padding: 1%;
 }
 
-.actions {
+.right {
+  left: auto;
+  right: 0;
+}
+
+.menu > div {
+  font-size: 25px;
   border: 2px solid white;
   background: var(--bgBlue);
   border-radius: 15px;
@@ -80,6 +87,18 @@ button:active {
   flex-direction: column;
   justify-content: flex-start;
   gap: 5px;
+}
+
+.menu > .confirmation {
+  padding: 20px;
+  width: auto;
+  align-items: center;
+}
+
+.confirmation button {
+  width: 100px;
+  margin-top: 10px;
+  text-align: center;
 }
 
 .character img {
