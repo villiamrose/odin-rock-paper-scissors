@@ -7,6 +7,7 @@ class Screen {
   static #heroHpCurrent = document.querySelector('.hero .hp .current');
   static #enemyHpTotal = document.querySelector('.enemy .hp .total');
   static #enemyHpCurrent = document.querySelector('.enemy .hp .current');
+  static #character = document.querySelector('.character');
   
   static #isLogging = false;
   static #logQueue = [];
@@ -81,6 +82,15 @@ class Screen {
     // setAttribute('background-image', `url('./res/backgrounds/${filename}.jpg')`);
   }
 
+  static setEnemy(name, fileName) {
+    const img = document.createElement('img');    
+    img.setAttribute('src', `./res/characters/${fileName}.png`);
+
+    this.#character.appendChild(img);
+    
+    Screen.log(`A ${name} appears!`);
+  }
+
   static setHeroHpCurrent(hp) {
     this.#heroHpCurrent.textContent = hp;
   }
@@ -103,17 +113,73 @@ class Game {
   #round = 0;
   #enemyHp = 0;
   #heroHp = 0;
+  #enemy = [];
 
   constructor() {
-    Screen.setBackground();
     this.#round = 1;
-    this.#enemyHp = 5;
     this.#heroHp = 5;
-
+    this.#enemyHp = 5;
+    this.#enemy = this.#createEnemy();
+    
+    Screen.setBackground();
     Screen.setEnemyHpCurrent(this.#enemyHp);
     Screen.setEnemyHpTotal(this.#enemyHp);
     Screen.setHeroHpCurrent(this.#heroHp);
     Screen.setHeroHpTotal(this.#heroHp);
+    Screen.setEnemy(this.#enemy.name, this.#enemy.fileName);
+  }
+
+  #createEnemy() {
+    const ENEMIES = [
+      {name: 'Alien', fileName: 'chr_aln'},
+      {name: 'Apple', fileName: 'chr_apl'},
+      {name: 'Bunny Kid', fileName: 'chr_bny'},
+      {name: 'Doctor', fileName: 'chr_dct'},
+      {name: 'Dragonfly', fileName: 'chr_drg'},
+      {name: 'Egg', fileName: 'chr_egg'},
+      {name: 'Elephant', fileName: 'chr_elp'},
+      {name: 'Eggplant', fileName: 'chr_epl'},
+      {name: 'Hunter', fileName: 'chr_htr'},
+      {name: 'Money', fileName: 'chr_mny'},
+      {name: 'Ninja', fileName: 'chr_nnj'},
+      {name: 'Nerd', fileName: 'chr_nrd'},
+      {name: 'Old Man', fileName: 'chr_old'},
+      {name: 'Photographer', fileName: 'chr_pht'},
+      {name: 'Racoon', fileName: 'chr_rcn'},
+      {name: 'Skeleton', fileName: 'chr_skl'},
+      {name: 'Square', fileName: 'chr_sqr'},
+      {name: 'Unicorn', fileName: 'chr_ucn'},
+      {name: 'Watermelon', fileName: 'chr_wml'}
+    ];
+    const DESCRIPTIONS = [
+      'Lazy',
+      'Homeless',
+      'Dirty',
+      'Naughty',
+      'Rabid',
+      'Sneaky',
+      'Rotund',
+      'Crazy',
+      'Nosy',
+      'Regular',
+      'Curious',
+      'Shy',
+      'Geeky',
+      'Skinny',
+      'Sleepy',
+      'Crummy',
+      'Suspicious',
+      'Dank',
+      'Drunk',
+      'Militant',
+      'Sleazy'
+    ];
+    const enemy = ENEMIES[getRandomNumber(ENEMIES.length - 1)];
+    const description = DESCRIPTIONS[getRandomNumber(DESCRIPTIONS.length - 1)];
+
+    enemy.name = `${description} ${enemy.name}`;
+    
+    return enemy;
   }
 
   getHeroHp() {
