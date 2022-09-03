@@ -7,7 +7,8 @@ class Screen {
   static #heroHpCurrent = document.querySelector('.hero .hp .current');
   static #enemyHpTotal = document.querySelector('.enemy .hp .total');
   static #enemyHpCurrent = document.querySelector('.enemy .hp .current');
-  static #character = document.querySelector('.character');
+  static #enemyName = document.querySelector('.enemy .name');
+  static #enemy = document.querySelector('.enemy');
   
   static #isLogging = false;
   static #logQueue = [];
@@ -86,7 +87,8 @@ class Screen {
     const img = document.createElement('img');    
     img.setAttribute('src', `./res/characters/${fileName}.png`);
 
-    this.#character.appendChild(img);
+    this.#enemy.appendChild(img);
+    this.#enemyName.textContent = name;
     
     Screen.log(`A ${name} appears!`);
   }
