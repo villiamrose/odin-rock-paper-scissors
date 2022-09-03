@@ -192,6 +192,10 @@ class Game {
     return this.#enemyHp;
   }
 
+  getEnemyName() {
+    return this.#enemy.name;
+  }
+
   decreaseHeroHp() {
     if(this.#heroHp !== 0) {
       --this.#heroHp;
@@ -218,9 +222,9 @@ class Game {
 
   displayResult() {
     if (this.#heroHp > this.#enemyHp) {
-      Screen.log(`The enemy has been defeated. You won the game!`);
+      Screen.log(`The ${this.getEnemyName()} has been defeated. You won the game!`);
     } else {
-      Screen.log(`You have been beaten by the enemy. You lost the game!`);
+      Screen.log(`You have been beaten by the ${this.getEnemyName()}. You lost the game!`);
     }
     Screen.log(`Game over!`);
   }
@@ -247,10 +251,11 @@ class Game {
 }
 
 class Round {
-  constructor(round, playerAction, computerAction) {
+  constructor(round, playerAction, computerAction, enemyName) {
     this._round = round;
-    this._playerAction = playerAction,
-    this._computerAction = computerAction
+    this._playerAction = playerAction;
+    this._computerAction = computerAction;
+    this._enemyName = enemyName;
   }
 
   getRound() {
@@ -278,9 +283,9 @@ class Round {
 
   displayResult() {
     if(this.getResult() === 1) {
-      Screen.log(`Player wins! ${this._playerAction.toUpperCase()} beats ${this._computerAction.toUpperCase()}`);
+      Screen.log(`The Hero wins! ${this._playerAction.toUpperCase()} beats ${this._computerAction.toUpperCase()}`);
     } else if (this.getResult() === -1) {
-      Screen.log(`Computer wins! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
+      Screen.log(`The ${this._enemyName} wins! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
     } else {
       Screen.log(`Draw! You both chose ${this._playerAction.toUpperCase()}`);
     }
@@ -301,10 +306,10 @@ function getRandomNumber(maxValue) {
 
 // randomly choose between current available actions
 // this serves as the selection of the computer
-function getComputerAction() {
+function getComputerAction(name) {
   const actions = getActions();
   const index = getRandomNumber(actions.length - 1);
-  Screen.log(`Computer uses ${actions[index].toUpperCase()}`);
+  Screen.log(`The ${name} attacks with a ${actions[index].toUpperCase()}`);
   return actions[index];
 }
 
@@ -332,7 +337,7 @@ function getPlayerAction() {
   const selectedButton = Screen.getSelectedButton();
   const targetId = selectedButton.id;
   const action = targetId.split('_')[1];
-  Screen.log(`Player uses ${action.toUpperCase()}`);
+  Screen.log(`The Hero attacks with a ${action.toUpperCase()}`);
   return action;
 }
 
@@ -342,7 +347,8 @@ function playRound(game) {
   const round = new Round(
     game.getRound(),
     getPlayerAction(),
-    getComputerAction()
+    getComputerAction(game.getEnemyName()),
+    game.getEnemyName()
   );
   
   round.displayResult();
