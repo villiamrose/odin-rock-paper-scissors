@@ -17,7 +17,7 @@ class Screen {
     this.#isLogging = true;
 
     
-    const interval = 50;
+    const interval = 25;
     let timeout = 0;
     let logText = `${this.#logQueue[0]}...`;
     let textArray = logText.split('');
@@ -71,32 +71,44 @@ class Screen {
   }
 
   static confirm(message, ifYes, ifNo) {
+    if(this.#isLogging) {
+      console.log('still logging');
+      setTimeout(() => this.confirm(message, ifYes, ifNo), 50);
+    } else {
+      console.log('not logging');
+      const actionMenu = document.querySelector('.menu .actions');
+      const confirmation = document.querySelector('.confirmation');
+      const confirmMessage = document.querySelector('.confirmation .message');
+      const yesButton = document.querySelector('#opt_yes');
+      const noButton = document.querySelector('#opt_no');
+  
+      function yesHandler() {
+        yesButton.removeEventListener('click', noHandler);
+        confirmation.classList.add('hidden');
+        actionMenu.classList.remove('hidden');
+        ifYes();
+      };
+  
+      function noHandler() {
+        yesButton.removeEventListener('click', yesHandler);
+        confirmation.classList.add('hidden');
+        actionMenu.classList.remove('hidden');
+        ifNo();
+      };
+  
+      confirmMessage.textContent = message;
+      yesButton.addEventListener('click', yesHandler, {once: true});
+      noButton.addEventListener('click', noHandler, {once: true});
+      
+      actionMenu.classList.add('hidden');
+      confirmation.classList.remove('hidden');
+
+    }
+  }
+
+  static hideActions() {
     const actionMenu = document.querySelector('.menu .actions');
-    const confirmation = document.querySelector('.confirmation');
-    const confirmMessage = document.querySelector('.confirmation .message');
-    const yesButton = document.querySelector('#opt_yes');
-    const noButton = document.querySelector('#opt_no');
-
-    function yesHandler() {
-      ifYes();
-      yesButton.removeEventListener('click', noHandler);
-      confirmation.classList.add('hidden');
-      actionMenu.classList.remove('hidden');
-    };
-
-    function noHandler() {
-      ifNo();
-      yesButton.removeEventListener('click', yesHandler);
-      confirmation.classList.add('hidden');
-      actionMenu.classList.remove('hidden');
-    };
-
-    confirmMessage.textContent = message;
-    yesButton.addEventListener('click', yesHandler, {once: true});
-    noButton.addEventListener('click', noHandler, {once: true});
-    
     actionMenu.classList.add('hidden');
-    confirmation.classList.remove('hidden');
   }
 
   static setBackground() {
@@ -135,7 +147,6 @@ class Screen {
 }
 
 class Game {
-  static MAX_ROUNDS = 5;
   #round = 0;
   #enemyHp = 0;
   #heroHp = 0;
@@ -143,8 +154,8 @@ class Game {
 
   constructor() {
     this.#round = 1;
-    this.#heroHp = 5;
-    this.#enemyHp = 5;
+    this.#heroHp = 3;
+    this.#enemyHp = 3;
     this.#enemy = this.#createEnemy();
     
     Screen.setBackground();
@@ -248,15 +259,21 @@ class Game {
     if (this.#heroHp > this.#enemyHp) {
       Screen.log(`The ${this.getEnemyName()} has been defeated. You won the game!`);
     } else {
-      Screen.log(`You have been beaten by the ${this.getEnemyName()}. You lost the game!`);
+      Screen.log(`The Hero faints. You lost the game!`);
     }
-    Screen.log(`Game over!`);
   }
 
   nextRound() {
     if (this.#heroHp == 0 || this.#enemyHp == 0) {
       this.displayResult();
-      resetGame(this);
+      Screen.confirm(
+        `Game over! Play again?`, 
+        () => resetGame(this),
+        () => {
+          Screen.log('Thanks for playing!');
+          Screen.hideActions();
+        }
+      );
     } else {
       this.#round++;
     };
@@ -314,7 +331,7 @@ class Round {
     } else if (this.getResult() === -1) {
       Screen.log(`The ${this._enemyName} wins! ${this._computerAction.toUpperCase()} beats ${this._playerAction.toUpperCase()}`);
     } else {
-      Screen.log(`Draw! You both chose ${this._playerAction.toUpperCase()}`);
+      Screen.log(`Draw! Both chose ${this._playerAction.toUpperCase()}`);
     }
   }
 }
