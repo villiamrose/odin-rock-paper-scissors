@@ -83,18 +83,22 @@ class Screen {
       const noButton = document.querySelector('#opt_no');
   
       function yesHandler() {
-        yesButton.removeEventListener('click', noHandler);
+        const newBtn = noButton.cloneNode(true);
+        noButton.parentNode.replaceChild(newBtn, noButton);
+        
         confirmation.classList.add('hidden');
         actionMenu.classList.remove('hidden');
         ifYes();
-      };
+      }
   
       function noHandler() {
-        yesButton.removeEventListener('click', yesHandler);
+        const newBtn = yesButton.cloneNode(true);
+        yesButton.parentNode.replaceChild(newBtn, yesButton);
+        
         confirmation.classList.add('hidden');
         actionMenu.classList.remove('hidden');
         ifNo();
-      };
+      }
   
       confirmMessage.textContent = message;
       yesButton.addEventListener('click', yesHandler, {once: true});
