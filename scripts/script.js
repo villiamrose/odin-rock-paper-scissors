@@ -17,7 +17,7 @@ class Screen {
     this.#isLogging = true;
 
     
-    const interval = 25;
+    const interval = 50;
     let timeout = 0;
     let logText = `${this.#logQueue[0]}...`;
     let textArray = logText.split('');
@@ -130,11 +130,19 @@ class Screen {
   }
 
   static setHeroHpCurrent(hp) {
-    this.#heroHpCurrent.textContent = hp;
+    if(this.#isLogging) {
+      setTimeout(() => this.setHeroHpCurrent(hp), 50);
+    } else {
+      this.#heroHpCurrent.textContent = hp;
+    }
   }
 
   static setEnemyHpCurrent(hp) {
-    this.#enemyHpCurrent.textContent = hp;
+    if(this.#isLogging) {
+      setTimeout(() => this.setEnemyHpCurrent(hp), 50);
+    } else {
+      this.#enemyHpCurrent.textContent = hp;
+    }
   }
 
   static setHeroHpTotal(hp) {
