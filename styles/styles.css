@@ -29,7 +29,7 @@ button {
 }
 
 button:hover {
-  color: var(--bgBlue);
+  color: var(--gray);
   background-color: white;
 }
 
@@ -68,11 +68,6 @@ button:active {
   display: flex;
   align-items: flex-end;
   padding: 1%;
-}
-
-.right {
-  left: auto;
-  right: 0;
 }
 
 .menu > div {
@@ -141,6 +136,10 @@ button:active {
 
 .hp {
   margin-left: auto;
+}
+
+div.hidden {
+  display: none;
 }
 
 /* div {

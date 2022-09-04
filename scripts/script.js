@@ -70,9 +70,33 @@ class Screen {
     button.classList.add('selected');
   }
 
-  static confirmSelection() {
-    const selectedButton = this.getSelectedButton();
-    return confirm(`Use ${selectedButton.textContent}?`);
+  static confirm(message, ifYes, ifNo) {
+    const actionMenu = document.querySelector('.menu .actions');
+    const confirmation = document.querySelector('.confirmation');
+    const confirmMessage = document.querySelector('.confirmation .message');
+    const yesButton = document.querySelector('#opt_yes');
+    const noButton = document.querySelector('#opt_no');
+
+    function yesHandler() {
+      ifYes();
+      yesButton.removeEventListener('click', noHandler);
+      confirmation.classList.add('hidden');
+      actionMenu.classList.remove('hidden');
+    };
+
+    function noHandler() {
+      ifNo();
+      yesButton.removeEventListener('click', yesHandler);
+      confirmation.classList.add('hidden');
+      actionMenu.classList.remove('hidden');
+    };
+
+    confirmMessage.textContent = message;
+    yesButton.addEventListener('click', yesHandler, {once: true});
+    noButton.addEventListener('click', noHandler, {once: true});
+    
+    actionMenu.classList.add('hidden');
+    confirmation.classList.remove('hidden');
   }
 
   static setBackground() {
@@ -243,9 +267,12 @@ class Game {
     if(Screen.isLogging()) return;
     if (e.type === 'click') {
       Screen.setSelectedButton(e.target);
-      if(Screen.confirmSelection()) {
-        playRound(this);
-      }
+
+      Screen.confirm(
+        `Use ${Screen.getSelectedButton().textContent}?`, 
+        () => playRound(this),
+        () => {}
+      )
     }
   }
 }
