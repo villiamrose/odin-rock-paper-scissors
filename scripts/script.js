@@ -129,6 +129,16 @@ class Screen {
     Screen.log(`A ${name} appears!`);
   }
 
+  static removeEnemy() {
+    if(this.#isLogging) {
+      setTimeout(() => this.removeEnemy(), 50)
+    } else {
+      const img = document.querySelector('.enemy img');
+      console.log(img);
+      if(img) this.#enemy.removeChild(img);
+    }
+  }
+
   static setHeroHpCurrent(hp) {
     if(this.#isLogging) {
       setTimeout(() => this.setHeroHpCurrent(hp), 50);
@@ -266,6 +276,7 @@ class Game {
   displayResult() {
     if (this.#heroHp > this.#enemyHp) {
       Screen.log(`The ${this.getEnemyName()} has been defeated. You won the game!`);
+      Screen.removeEnemy();
     } else {
       Screen.log(`The Hero faints. You lost the game!`);
     }
@@ -419,6 +430,8 @@ function playRound(game) {
 function resetGame(game) {
   const actionButtons = Screen.getActionButtons();
   actionButtons.forEach(button => button.removeEventListener('click', game));
+  Screen.clearLog();
+  Screen.removeEnemy();
   newGame();
 }
 
